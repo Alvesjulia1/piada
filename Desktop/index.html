@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Gerador de Piadas e Reações de Gato</title>
+</head>
+<body>
+  <button id="getJokeButton">Obter Piada</button>
+  <div id="jokeContainer"></div>
+  <div id="catImageContainer"></div>
+
+  <script>
+    const { ipcRenderer } = require('electron');
+
+    const getJokeButton = document.getElementById('getJokeButton');
+    const jokeContainer = document.getElementById('jokeContainer');
+    const catImageContainer = document.getElementById('catImageContainer');
+
+    getJokeButton.addEventListener('click', () => {
+      ipcRenderer.send('get-joke');
+    });
+
+    ipcRenderer.on('joke', (event, joke) => {
+      jokeContainer.textContent = joke;
+    });
+
+    ipcRenderer.send('get-cat-image');
+
+    ipcRenderer.on('cat-image', (event, imageUrl) => {
+      const image = document.createElement('img');
+      image.src = imageUrl;
+      catImageContainer.appendChild(image);
+    });
+  </script>
+</body>
+</html>
